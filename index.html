@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TASK 3 Advanced Styling and JavaScript</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+background:#f2f4f8;
+padding:30px;
+}
+
+h1{
+text-align:center;
+margin-bottom:30px;
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:25px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:8px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card h2{
+margin-bottom:15px;
+}
+
+button{
+padding:10px 15px;
+border:none;
+background:#1f4e79;
+color:white;
+border-radius:4px;
+cursor:pointer;
+}
+
+button:hover{
+background:#163a5c;
+}
+
+.options button{
+display:block;
+width:100%;
+margin:6px 0;
+background:#e9eef4;
+color:#333;
+}
+
+.options button:hover{
+background:#d7e2ef;
+}
+
+.carousel{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+}
+
+.carousel img{
+width:100%;
+max-width:350px;
+border-radius:6px;
+}
+
+@media(max-width:600px){
+body{
+padding:15px;
+}
+}
+
+</style>
+</head>
+
+
+<body>
+
+<h1>TASK 3 Advanced Styling and JavaScript</h1>
+
+<div class="container">
+
+
+<!-- QUIZ -->
+
+<div class="card">
+
+<h2>Interactive Quiz</h2>
+
+<p id="question"></p>
+
+<div class="options" id="options"></div>
+
+<p id="quizResult"></p>
+
+</div>
+
+
+
+<!-- IMAGE CAROUSEL -->
+
+<div class="card">
+
+<h2>Image Carousel</h2>
+
+<div class="carousel">
+
+<button onclick="prevImage()">❮</button>
+
+<img id="carouselImg" src="https://picsum.photos/600/350?1">
+
+<button onclick="nextImage()">❯</button>
+
+</div>
+
+</div>
+
+
+
+<!-- API SECTION -->
+
+<div class="card">
+
+<h2>Random Joke</h2>
+
+<button onclick="getJoke()">Get Joke</button>
+
+<p id="jokeText"></p>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+// QUIZ
+
+const quizData = [
+
+{
+question:"Which language styles web pages?",
+options:["HTML","CSS","Python","C++"],
+answer:1
+},
+
+{
+question:"Which method is used to fetch API data?",
+options:["fetch()","get()","load()","request()"],
+answer:0
+},
+
+{
+question:"Which CSS layout is modern?",
+options:["Table","Grid","Float","Inline"],
+answer:1
+}
+
+]
+
+let qIndex=0
+let score=0
+
+function loadQuiz(){
+
+let q=quizData[qIndex]
+
+document.getElementById("question").innerText=q.question
+
+let optionsHTML=""
+
+q.options.forEach((opt,i)=>{
+
+optionsHTML+=`<button onclick="selectAnswer(${i})">${opt}</button>`
+
+})
+
+document.getElementById("options").innerHTML=optionsHTML
+
+}
+
+function selectAnswer(i){
+
+if(i===quizData[qIndex].answer){
+score++
+}
+
+qIndex++
+
+if(qIndex<quizData.length){
+loadQuiz()
+}else{
+document.getElementById("question").innerText="Quiz Completed"
+document.getElementById("options").innerHTML=""
+document.getElementById("quizResult").innerText="Score: "+score+" / "+quizData.length
+}
+
+}
+
+loadQuiz()
+
+
+
+// CAROUSEL
+
+const images=[
+"https://picsum.photos/600/350?1",
+"https://picsum.photos/600/350?2",
+"https://picsum.photos/600/350?3",
+"https://picsum.photos/600/350?4"
+]
+
+let imgIndex=0
+
+function nextImage(){
+
+imgIndex=(imgIndex+1)%images.length
+document.getElementById("carouselImg").src=images[imgIndex]
+
+}
+
+function prevImage(){
+
+imgIndex=(imgIndex-1+images.length)%images.length
+document.getElementById("carouselImg").src=images[imgIndex]
+
+}
+
+
+
+// API FETCH
+
+async function getJoke(){
+
+const res=await fetch("https://official-joke-api.appspot.com/random_joke")
+
+const data=await res.json()
+
+document.getElementById("jokeText").innerText=data.setup+" - "+data.punchline
+
+}
+
+</script>
+
+
+</body>
+</html>
